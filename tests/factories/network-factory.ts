@@ -2,7 +2,7 @@ import { prisma } from "../../src/config/database";
 import { Network, User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { createUser } from "./users-factory";
-import { cryptographyUtil } from "../utils/encryptUtils";
+import { cryptographyUtil } from "../../src/utils/encryptUtils";
 
 export async function createWiFi(user?: User): Promise<Network> {
   const creatingUser = user || (await createUser());

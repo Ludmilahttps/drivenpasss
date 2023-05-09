@@ -2,7 +2,7 @@ import { prisma } from "../../src/config/database";
 import { faker } from "@faker-js/faker";
 import { User, Credential} from "@prisma/client";
 import { createUser } from "./users-factory";
-import { cryptographyUtil } from "../utils/encryptUtils";
+import { cryptographyUtil } from "../../src/utils/encryptUtils";
 
 export async function createCredential(user?: User): Promise<Credential> {
   const creatingUser = user || (await createUser());
