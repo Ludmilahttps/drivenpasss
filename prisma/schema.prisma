@@ -17,6 +17,7 @@ model User {
   Credential Credential[]
   Network    Network[]
   SecureNote SecureNote[]
+  Session    Session[]
 
   @@map("users")
 }
@@ -83,4 +84,15 @@ enum CardType {
   debit
 
   @@map("cardType")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp } from "../controllers/index";
+import { signIn, signUp } from "../controllers/users-controller";
 import { Validation } from '../middlewares/validationMiddleware';
 import * as authenticate from '../middlewares/authenticationMiddleware'
 

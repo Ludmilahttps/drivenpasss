@@ -3,7 +3,6 @@ import { Network } from "@prisma/client";
 import { IInsertNetwork } from "../interfaces/network-interface";
 import { TitlesList } from "../types/userTypes";
 
-
 export async function insertData (data: IInsertNetwork){
     await client.network.create({
         data: data

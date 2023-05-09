@@ -3,13 +3,7 @@ import { ErrorInfo } from "../../middlewares/errorMiddleware"
 import * as userRepository from "../../repositories/usersRepository"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { CategoryCount, TokenConfig } from "../../types/userTypes";
 import { User } from "@prisma/client";
-// import { credentialTitles } from "../repositories/credentialsRepository";
-// import { cardTitles } from "../repositories/cardsRepository";
-// import { networkTitles } from "../repositories/networkRepository";
-// import { noteTitles } from "../repositories/notesRepository";
-
 
 export async function checkEmail (email: string, method: "sign-in" | "sign-up" ) : Promise<User | undefined>{
     const account : User | null = await userRepository.checkData(email);
@@ -52,17 +46,3 @@ export async function generateToken(id: string) {
     }
     return config
 };
-
-// export async function handleEachSum ( userId: string) : Promise<CategoryCount>{
-//  const credentials  = await credentialTitles(userId);
-//  const cards  = await cardTitles(userId);
-//  const networks  = await networkTitles(userId);
-//  const notes  = await noteTitles(userId);
-
-//  return [
-//     {title: "Credentials", quantity: credentials.length},
-//     {title: "Safe Notes", quantity: notes.length},
-//     {title: "Cards", quantity: cards.length},
-//     {title: "WiFi Passwords", quantity: networks.length},
-// ]
-// }
