@@ -8,6 +8,6 @@ const usersRouter = Router();
 usersRouter
     .all('/*', authenticate.authenticateToken)
     .post("/sign-up", Validation.signup, signUp)
-    .post("/sign-in", Validation.signin, signIn);
+    .post("/sign-in", Validation.signin, signIn)
 
 export { usersRouter };
