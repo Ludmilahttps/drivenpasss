@@ -142,7 +142,7 @@ describe('POST /credentials/create', () => {
 
   it('should respond with status 401 if no token', async () => {
     const credential = generateBody();
-    const response = await server.post('/credentials').send({ ...credential });
+    const response = await server.post('/credentials/create').send({ ...credential });
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -151,7 +151,7 @@ describe('POST /credentials/create', () => {
     const credential = generateBody();
     const token = faker.lorem.word();
 
-    const response = await server.post('/credentials').send({ ...credential }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/credentials/create').send({ ...credential }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -161,7 +161,7 @@ describe('POST /credentials/create', () => {
     const token = jwt.sign({ userId: user.id }, "top_secret");
     const credential = generateBody();
 
-    const response = await server.post('/credentials').send({ ...credential }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/credentials/create').send({ ...credential }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -175,7 +175,7 @@ describe('POST /credentials/create', () => {
 
     firstCredential.title = secondCredential.title;
 
-    const response = await server.post(`/credentials`).send({ ...firstCredential }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post(`/credentials/create`).send({ ...firstCredential }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.CONFLICT);
   });
@@ -185,7 +185,7 @@ describe('POST /credentials/create', () => {
     const token = await generateToken(user);
     const credential = generateBody();
 
-    const response = await server.post(`/credentials`).send({ ...credential }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post(`/credentials/create`).send({ ...credential }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.CREATED);
 

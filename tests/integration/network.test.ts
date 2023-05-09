@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { createUser } from "../factories/users-factory";
 import { cleanDb, generateToken } from "../helpers";
 import { createWiFi } from "../factories/network-factory";
-import { cryptographyUtil } from "../utils/encryptUtils";
+import { cryptographyUtil } from "../../src/utils/encryptUtils";
 
 beforeAll(async () => {
   await init();
@@ -24,7 +24,7 @@ describe('GET /networks', () => {
 
   it('should respond with status 401 if token is not valid', async () => {
     const token = faker.lorem.word();
-    const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -33,7 +33,7 @@ describe('GET /networks', () => {
     const user = await createUser();
     const token = jwt.sign({ userId: user.id }, "top_secret");
 
-    const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -42,7 +42,7 @@ describe('GET /networks', () => {
     it('should respond with status 404 when user dont have Wi-fi', async () => {
       const user = await createUser();
       const token = await generateToken(user);
-      const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
@@ -54,7 +54,7 @@ describe('GET /networks', () => {
       const firstWiFi = await createWiFi(user);
       const secondWiFi = await createWiFi(user);
 
-      const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.OK);
 
@@ -81,7 +81,7 @@ describe('GET /networks/:id', () => {
 
   it('should respond with status 401 if token is not valid', async () => {
     const token = faker.lorem.word();
-    const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -89,7 +89,7 @@ describe('GET /networks/:id', () => {
   it('should respond with status 401 if dont have session for token', async () => {
     const user = await createUser();
     const token = jwt.sign({ userId: user.id }, "top_secret");
-    const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -98,7 +98,7 @@ describe('GET /networks/:id', () => {
     it('should respond with status 404 when user dont have Wi-fi', async () => {
       const user = await createUser();
       const token = await generateToken(user);
-      const response = await server.get('/wi-fi').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/networks').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
@@ -121,7 +121,7 @@ describe('GET /networks/:id', () => {
 
       const wiFi = await createWiFi(user);
 
-      const response = await server.get(`/wi-fi/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
+      const response = await server.get(`/networks/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.OK);
 
@@ -142,7 +142,7 @@ describe('POST /networks/create', () => {
 
   it('should respond with status 401 if no token', async () => {
     const wiFi = generateBody();
-    const response = await server.post('/wi-fi').send({ ...wiFi });
+    const response = await server.post('/networks/create').send({ ...wiFi });
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -151,7 +151,7 @@ describe('POST /networks/create', () => {
     const token = faker.lorem.word();
     const wiFi = generateBody();
 
-    const response = await server.post('/wi-fi').send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/networks/create').send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -161,7 +161,7 @@ describe('POST /networks/create', () => {
     const token = jwt.sign({ userId: user.id }, "top_secret");
     const wiFi = generateBody();
 
-    const response = await server.post('/wi-fi').send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/networks/create').send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -175,7 +175,7 @@ describe('POST /networks/create', () => {
 
     firstWiFi.title = secondWiFi.title;
 
-    const response = await server.post(`/wi-fi`).send({ ...firstWiFi }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post(`/networks/create`).send({ ...firstWiFi }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.CONFLICT);
   });
@@ -185,7 +185,7 @@ describe('POST /networks/create', () => {
     const token = await generateToken(user);
     const wiFi = generateBody();
 
-    const response = await server.post(`/wi-fi`).send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
+    const response = await server.post(`/networks/create`).send({ ...wiFi }).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.CREATED);
 
@@ -198,7 +198,7 @@ describe('POST /networks/create', () => {
 describe('DELETE /networks/:id', () => {
   it('should respond with status 401 if no token', async () => {
     const wiFi = await createWiFi();
-    const response = await server.delete(`/wi-fi/${wiFi.id}`);
+    const response = await server.delete(`/networks/${wiFi.id}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -207,7 +207,7 @@ describe('DELETE /networks/:id', () => {
     const token = faker.lorem.word();
     const wiFi = await createWiFi();
 
-    const response = await server.delete(`/wi-fi/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
+    const response = await server.delete(`/networks/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -217,7 +217,7 @@ describe('DELETE /networks/:id', () => {
     const token = jwt.sign({ userId: user.id }, "top_secret");
     const wiFi = await createWiFi();
 
-    const response = await server.delete(`/wi-fi/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
+    const response = await server.delete(`/networks/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -226,7 +226,7 @@ describe('DELETE /networks/:id', () => {
     const user = await createUser();
     const token = await generateToken(user);
 
-    const response = await server.delete(`/wi-fi/1`).set('Authorization', `Bearer ${token}`);
+    const response = await server.delete(`/networks/1`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
@@ -236,7 +236,7 @@ describe('DELETE /networks/:id', () => {
     const token = await generateToken(user);
     const wiFi = await createWiFi();
 
-    const response = await server.delete(`/wi-fi/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
+    const response = await server.delete(`/networks/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
@@ -246,7 +246,7 @@ describe('DELETE /networks/:id', () => {
     const token = await generateToken(user);
     const wiFi = await createWiFi(user);
 
-    const response = await server.delete(`/wi-fi/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
+    const response = await server.delete(`/networks/${wiFi.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.ACCEPTED);
   });
